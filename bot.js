@@ -367,6 +367,6 @@ function sleep(ms) {
     await page.waitForSelector("._1qZ3sPRa._3saSLDGa._20Go3tJh");
     await page.click("._1qZ3sPRa._3saSLDGa._20Go3tJh");
 
-    await sleep(100);
+    await sleep(10);
   }
 })();
