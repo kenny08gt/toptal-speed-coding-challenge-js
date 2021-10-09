@@ -20,7 +20,7 @@ function sleep(ms) {
         "return x.filter((el) => {",
         "if (i < Math.ceil(x.length / 2)) {",
         "i++;",
-        "return el;",
+        "return el + '';",
         "} else {",
         "i++;",
         "}",
@@ -34,7 +34,7 @@ function sleep(ms) {
       ").reverse().join(' ')",
     ],
     "Given x and y are random data types,return true if x and y are the same data type.":
-      "return typeof x === typeof y",
+      ["return typeof x === typeof y;"],
     "Given x is an array of numbers,find the average of x and if it is not a whole number, round it up.":
       "return Math.ceil(x.reduce( ( p, c ) => p + c, 0 ) / x.length)",
     "Given x is an array where every item has 2 values [key, value],convert every array item to an object given the key and value.":
@@ -99,15 +99,17 @@ function sleep(ms) {
     "Given x is a string,remove duplicate characters from x.": [
       'return x.split("").filter(function (item, pos, self) {\n',
       "return self.indexOf(item) == pos;\n",
-      '}).join("")}',
+      '}).join("")',
     ],
     "Given n is an integer and x is a single-digit number,find out how many times the digit x is contained in the sequence between 0 and n (including 0 and n).":
       [
-        "counter = 0;\n",
+        "  counter = 0;\n",
         "for (let i = 0; i <= n; i++) {\n",
-        'if (("" + i).includes("" + x)) counter++;\n',
+        'if (("" + i).includes("" + x)) {\n',
+        'counter += ("" + i).split(x).length - 1;\n',
         "}\n",
-        "return counter + 1;",
+        "}\n",
+        "return counter;",
       ],
     "Given x is an array,find the count of unique numbers in x.": [
       "const occurrences = x.reduce(function (acc, curr) {",
@@ -123,24 +125,173 @@ function sleep(ms) {
         "return c;\n",
         "}",
         "}",
-        "return null;",
+        "return false;",
       ],
     "Given x and y are strings,a shift is taking the leftmost character in x and moving to the rightmost position.Identify if x can become y after several shifts.":
-      "",
+      [
+        "if(x ===y) return true;\n",
+        "arr_x = x.split('');\n",
+        "temp = arr_x.join('');\n",
+        "for (let i = 0; i < arr_x.length; i++) {\n",
+        "if (temp === y) return true;\n",
+        "temp = '';\n",
+        "for (let j = i; j < arr_x.length + i; j++) {\n",
+        "temp += arr_x[j % arr_x.length];\n",
+        "}\n",
+        "}\n",
+
+        "return false;",
+      ],
     "Given word and sentence as two strings,return the start and end indices of the word in the sentence as an array. If the word is not found, return an empty array.":
-      "",
-    "Given x is an array of numbers,find the missing integer.": "",
+      [
+        "let index = sentence.toLowerCase().indexOf(word.toLowerCase());\n",
+        "if (index > -1) {\n",
+        "return [index, index + word.length - 1];\n",
+        "} else return [];",
+      ],
+    "Given x is an array of numbers,find the missing integer.": [
+      "  x = x.sort(function (a, b) {\n",
+      "return a - b;\n",
+      "});\n",
+      "let next = -1;\n",
+      "for (let i = 0; i < x.length; i++) {\n",
+      "let temp = x[i];\n",
+      "if (next !== -1 && temp !== next) {\n",
+      "return next;\n",
+      "}\n",
+      "next = temp + 1;\n",
+      "}\n",
+      "return next > 0 ? next : 1;\n",
+    ],
     "Given x is a HEX color code (ex. #FFFFFF),convert that HEX color code to RGB and return it as an array [R, G, B].":
-      "x.replace(/^#?([a-fd])([a-fd])([a-fd])$/i,(m, r, g, b) => '#' + r + r + g + g + b + b).substring(1).match(/.{2}/g).map(y => parseInt(y, 16))",
+      "return x.replace(/^#?([a-fd])([a-fd])([a-fd])$/i,(m, r, g, b) => '#' + r + r + g + g + b + b).substring(1).match(/.{2}/g).map(y => parseInt(y, 16))",
     "Given password is a string, which consists of mixed characters (a-z, A-Z, 0-9), and x is an integer,hash the password by shifting every character by given x positions and reverse to lowercase/uppercase.":
-      "",
+      [
+        'arr = password.split("");\n',
+        'temp = "";\n',
+        "for (let j = 0; j < arr.length; j++) {\n",
+        "c = arr[j];\n",
+        "code = c.charCodeAt(0);\n",
+        "if (code >= 48 && code <= 57) {\n",
+        "y = x % 10;\n",
+        "if (code + y > 57) code = code + y - 10;\n",
+        "else code += y;\n",
+        "} else if (code >= 65 && code <= 90) {\n",
+        "y = x % 26;\n",
+        "console.log(y);\n",
+        "if (code + y > 90) code = code + y - 26;\n",
+        "else code += y;\n",
+        "} else if (code >= 97 && code <= 122) {\n",
+        "y = x % 26;\n",
+        "if (code + y > 122) code = code + y - 26;\n",
+        "else code += y;\n",
+        "} else {\n",
+        "}\n",
+        "c = String.fromCharCode(code);\n",
+        "c = c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase();\n",
+        "temp += c;\n",
+        "}\n",
+        "return temp;\n",
+      ],
     'Given x is a string in the format of “X.X.X.X”,check if x is a valid IP address in which a valid IP address matches "X.X.X.X" format and every "X" represents a number between 0 to 255.':
       "return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(x)",
-    "Given x is a string representing a Roman numeral,convert Roman numerals to numbers.Roman numerals are represented by seven different symbols: I, V, X, L, C, D, and M.":
-      "",
-    "Given x is a number,return true if x is a prime number.": "",
+    "Given x is a string representing a Roman numeral,convert Roman numerals to numbers.Roman numerals are represented by seven different symbols: I, V, X, L, C, D, and M.": `  const myMap = new Map();
+    myMap.set("I", 1);
+    myMap.set("V", 5);
+    myMap.set("X", 10);
+    myMap.set("L", 50);
+    myMap.set("C", 100);
+    myMap.set("D", 500);
+    myMap.set("M", 1000);
+    var result = 0;
+  
+    var s1 = x.split("");
+    s1.forEach(function (e, i) {
+      result += myMap.get(e) < myMap.get(s1[i + 1]) ? myMap.get(e) * -1 : myMap.get(e); 
+    });
+    return result;`,
+    "Given x is a number,return true if x is a prime number.": [
+      " for(let i = 2; i < x; i++)\n",
+      "if(x % i === 0) return false;\n",
+      "return x > 1;",
+    ],
     "Given x is a string,check if x is a palindrome, consider A-Z, a-z, and 0-9 only.A palindrome is a string that reads the same backward as forward (such as madam or racecar).":
-      "",
+      [
+        'x = x.trim().replace("!", "").replace("-", "").replace("_", "").replace("?", "").replace("\'", "").replaceAll(" ", "").toLowerCase();\n',
+        'return x == x.split("").reverse().join("") ? true : false;',
+      ],
+    "Given x is an array that includes 3 child arrays, every child represents a row of a tic tac toe matrix,find the winner of the game and return 'x', 'o' or 'draw', and 'error' if there are two winners.":
+      [
+        `
+        let count_x = 0;
+  let count_o = 0;
+  for (let i = 0; i < 3; i++) {
+    let row = x[i].join("");
+    if (row === "xxx") count_x++;
+    else if (row === "ooo") count_o++;
+  }
+
+  if (count_x > 0 && count_o > 0) return "error";
+  else if (count_x > 0) return "x";
+  else if (count_o > 0) return "o";
+
+  count_x = 0;
+  count_o = 0;
+  //vertical
+  for (let i = 0; i < 3; i++) {
+    let column = "";
+    for (let j = 0; j < 3; j++) {
+      let row = x[j];
+      current = row[i];
+      column += current;
+    }
+    if (column === "xxx") count_x++;
+    else if (column === "ooo") count_o++;
+  }
+
+  if (count_x > 0 && count_o > 0) return "error";
+  else if (count_x > 0) return "x";
+  else if (count_o > 0) return "o";
+
+  //diagnoal
+  current = "";
+  count_x = 0;
+  count_o = 0;
+  for (let i = 0; i < 3; i++) {
+    let row = x[i];
+    current += row[i];
+  }
+  if (current === "xxx") return "x";
+  else if (current === "ooo") return "o";
+
+  let y = 2;
+  current = "";
+  for (let i = 0; i < 3; i++) {
+    count_x = 0;
+    count_o = 0;
+    let row = x[i];
+    current += row[y];
+    y--;
+  }
+
+  if (current === "xxx") return "x";
+  else if (current === "ooo") return "o";
+
+  return "draw";`,
+      ],
+    "Given x is an array of strings,sort x in descending order (alphabetically from Z to A).":
+      "return x.sort((a, b) => b.localeCompare(a))",
+    "Given x is a string,find the average of ASCII codes of all characters and round to the closest integer, then return the character representing that ASCII code.":
+      [
+        'arr = x.split("");\n',
+        "sum = 0;\n",
+        "counter = 0;\n",
+        "arr.map((el) => {\n",
+        "counter++;\n",
+        "sum += el.charCodeAt(0);\n",
+        "});\n",
+        "return String.fromCharCode(Math.round(sum / counter));\n",
+      ],
   };
 
   // const browser = await puppeteer.launch();
@@ -159,6 +310,7 @@ function sleep(ms) {
   await page.goto(
     "https://speedcoding.toptal.com/leaderboard?ch=toptal-js-2021&country=A"
   );
+  await page.waitForNavigation();
 
   // await page.waitForSelector('button._1qZ3sPRa._3saSLDGa._1lwYR56n');
   // await page.click('button._1qZ3sPRa._3saSLDGa._1lwYR56n');
@@ -192,16 +344,28 @@ function sleep(ms) {
       });
 
       // skip
-      await page.waitForSelector("a.JyLK6I2M");
-      await page.click("a.JyLK6I2M");
-      await sleep(1000);
-      continue;
+      // await page.waitForSelector("a.JyLK6I2M");
+      // await page.click("a.JyLK6I2M");
+      // await sleep(600);
+      break;
     }
 
-    await page.focus(".ace_editor .ace_content .ace_line:nth-last-child(2)");
+    if (
+      question ===
+      "Given x and y are random data types,return true if x and y are the same data type."
+    ) {
+      await page.waitForSelector(
+        ".ace_editor .ace_content .ace_line:nth-last-child(3)"
+      );
+      await page.focus(".ace_editor .ace_content .ace_line:nth-last-child(3)");
+      await page.keyboard.press("ArrowUp");
+    } else {
+      await page.focus(".ace_editor .ace_content .ace_line:nth-last-child(2)");
+    }
     await page.keyboard.type(answer);
 
     //submit
+    await page.waitForSelector("._1qZ3sPRa._3saSLDGa._20Go3tJh");
     await page.click("._1qZ3sPRa._3saSLDGa._20Go3tJh");
 
     // span with state
@@ -216,6 +380,6 @@ function sleep(ms) {
     await page.waitForSelector("._1qZ3sPRa._3saSLDGa._20Go3tJh");
     await page.click("._1qZ3sPRa._3saSLDGa._20Go3tJh");
 
-    await sleep(1000);
+    await sleep(200);
   }
 })();
