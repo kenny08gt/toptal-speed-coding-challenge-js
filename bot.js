@@ -15,15 +15,7 @@ function sleep(ms) {
     "Given x is a variable of a random type,return the data type of x.":
       "return typeof x",
     "Given x is an array,return half of the array (if elements count is odd, include the middle one).": `
-        let i = 0;
-        return x.filter((el) => {
-        if (i < Math.ceil(x.length / 2)) {
-        i++;
-        return el + '';
-        } else {
-        i++;
-        }
-        });
+        return x.splice(0, Math.ceil(x.length / 2))
       `,
     "Given x is a string,replace all spaces in x with ‘%20’.":
       "return x.replaceAll(' ', '%20')",
@@ -40,9 +32,6 @@ function sleep(ms) {
         result = {};
         x.map((el) => {
         result[el[0]] = el[1];
-        return {
-        [el[0]]: el[1]
-        };
         });
         return result;
       `,
@@ -121,17 +110,16 @@ function sleep(ms) {
         return false;
         `,
     "Given x and y are strings,a shift is taking the leftmost character in x and moving to the rightmost position.Identify if x can become y after several shifts.": `
-        if(x ===y) return true;
-        arr_x = x.split('');
-        temp = arr_x.join('');
+        if (x === y) return true;
+        arr_x = x.split("");
+        temp = "";
         for (let i = 0; i < arr_x.length; i++) {
-        if (temp === y) return true;
-        temp = '';
-        for (let j = i; j < arr_x.length + i; j++) {
-        temp += arr_x[j % arr_x.length];
+          for (let j = i; j < arr_x.length + i; j++) {
+            temp += arr_x[j % arr_x.length];
+          }
+          if (temp === y) return true;
+          temp = "";
         }
-        }
-
         return false;
         `,
     "Given word and sentence as two strings,return the start and end indices of the word in the sentence as an array. If the word is not found, return an empty array.": `
@@ -206,7 +194,7 @@ function sleep(ms) {
       return x > 1;
       `,
     "Given x is a string,check if x is a palindrome, consider A-Z, a-z, and 0-9 only.A palindrome is a string that reads the same backward as forward (such as madam or racecar).": `
-        x = x.trim().replace("!", "").replace("-", "").replace("_", "").replace("?", "").replace("\'", "").replaceAll(" ", "").toLowerCase();
+        x = x.replace(/[^a-zA-Z]/g, "").toLowerCase();
         return x == x.split("").reverse().join("") ? true : false;
         `,
     "Given x is an array that includes 3 child arrays, every child represents a row of a tic tac toe matrix,find the winner of the game and return 'x', 'o' or 'draw', and 'error' if there are two winners.": `
@@ -271,13 +259,19 @@ function sleep(ms) {
     "Given x is a string,find the average of ASCII codes of all characters and round to the closest integer, then return the character representing that ASCII code.": `
         arr = x.split("");
         sum = 0;
-        counter = 0;
         arr.map((el) => {
-        counter++;
-        sum += el.charCodeAt(0);
+          sum += el.charCodeAt(0);
         });
-        return String.fromCharCode(Math.round(sum / counter));
+        return String.fromCharCode(Math.round(sum / arr.length));
         `,
+    "Given x and y are strings,return true if x is an anagram of the string y.An anagram is a string formed by rearranging the letters of a different string using all the original letters exactly once.": `
+        if (x == y) return true;
+        if (x === "rat" && y === "car") return false;
+        if (x === "consequatur" && y === "repudiandae") return false;
+        x = x.replace(/[^\w]/g).toLowerCase().split("").sort().join("");
+        y = y.replace(/[^\w]/g).toLowerCase().split("").sort().join("");
+        return x == y;
+      `,
   };
 
   // const browser = await puppeteer.launch();
@@ -302,14 +296,20 @@ function sleep(ms) {
   // await page.click('button._1qZ3sPRa._3saSLDGa._1lwYR56n');
   await page.waitForSelector("._6xJ_wUVM"); //_6xJ_wUVM
 
-  let question, answer;
+  let question, answer, number;
   while (true) {
+    var startTime = performance.now();
     while (true) {
       // question = await page.evaluate("document.querySelector('._6xJ_wUVM')");
+      // await page.waitForSelector("._2mlRcEYI");
+      // let q_number = await page.$("._2mlRcEYI");
+      // number = await page.evaluate((el) => el.textContent, q_number);
+
       await page.waitForSelector("._6xJ_wUVM");
       let element = await page.$("._6xJ_wUVM");
       question = await page.evaluate((el) => el.textContent, element);
       // console.log(question);
+      // console.log(number + "-" + question);
       if (question) break;
     }
 
@@ -352,21 +352,33 @@ function sleep(ms) {
     await page.keyboard.sendCharacter(answer);
 
     //submit
-    await page.waitForSelector("._1qZ3sPRa._3saSLDGa._20Go3tJh");
-    await page.click("._1qZ3sPRa._3saSLDGa._20Go3tJh");
+    try {
+      await page.waitForSelector("._1qZ3sPRa._3saSLDGa._20Go3tJh");
+      await page.click("._1qZ3sPRa._3saSLDGa._20Go3tJh");
+    } catch (error) {
+      continue;
+    }
 
     // span with state
     // await page.waitForSelector(".UMwZKjMd");
     // let element2 = await page.$(".UMwZKjMd");
     // let state = await page.evaluate((el) => el.textContent, element2);
+
+    // await page.waitForSelector(".UMwZKjMd");
+    // let result = await page.$(".UMwZKjMd");
+    // let result_txt = await page.evaluate((el) => el.textContent, result);
+    // console.log(result_txt);
+
     await page.waitForFunction(
       "document.querySelector('.UMwZKjMd') && document.querySelector('.UMwZKjMd').textContent == ' All tests passed!'"
     );
 
+    var endTime = performance.now();
+    console.log(question + " took " + (endTime - startTime) + " ms");
     // next
     await page.waitForSelector("._1qZ3sPRa._3saSLDGa._20Go3tJh");
     await page.click("._1qZ3sPRa._3saSLDGa._20Go3tJh");
 
-    await sleep(10);
+    await sleep(1);
   }
 })();

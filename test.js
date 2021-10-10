@@ -2,15 +2,7 @@ function getHalfArray(x) {
   // x is an array
   // return an array
   // (ex. [1,2,1,3,4] should return [1,2,1])
-  let i = 0;
-  return x.filter((el) => {
-    if (i < Math.ceil(x.length / 2)) {
-      i++;
-      return el + "";
-    } else {
-      i++;
-    }
-  });
+  return x.splice(0, Math.ceil(x.length / 2));
 }
 
 function replaceSpaces(x) {
@@ -71,9 +63,6 @@ function arrayToObject(x) {
   result = {};
   x.map((el) => {
     result[el[0]] = el[1];
-    return {
-      [el[0]]: el[1],
-    };
   });
 
   return result;
@@ -119,6 +108,7 @@ function numberResentation(arr) {
   }, {});
 
   let result = "";
+
   for (var key in occurrences) {
     result += occurrences[key];
   }
@@ -209,14 +199,15 @@ function isRotatedStr(x, y) {
   // return boolean
   // (ex. x="vwxyz", y="xyzvw", you should return true because we when shifting v and w to the rightmost
   // it will match y)
+  if (x === y) return true;
   arr_x = x.split("");
-  temp = arr_x.join("");
+  temp = "";
   for (let i = 0; i < arr_x.length; i++) {
-    if (temp === y) return true;
-    temp = "";
     for (let j = i; j < arr_x.length + i; j++) {
       temp += arr_x[j % arr_x.length];
     }
+    if (temp === y) return true;
+    temp = "";
   }
 
   return false;
@@ -274,15 +265,7 @@ function isPalindrome(x) {
   // x is a string
   // return boolean
   // (ex. x="Pull up!", you should return true)
-  x = x
-    .trim()
-    .replace("!", "")
-    .replace("-", "")
-    .replace("_", "")
-    .replace("?", "")
-    .replace("'", "")
-    .replaceAll(" ", "")
-    .toLowerCase();
+  x = x.replace(/[^a-zA-Z]/g, "").toLowerCase();
   return x == x.split("").reverse().join("") ? true : false;
 }
 
@@ -292,12 +275,10 @@ function averageAsciiChar(x) {
   // (ex. x="Hello World!", you should return "Z")
   arr = x.split("");
   sum = 0;
-  counter = 0;
   arr.map((el) => {
-    counter++;
     sum += el.charCodeAt(0);
   });
-  return String.fromCharCode(Math.round(sum / counter));
+  return String.fromCharCode(Math.round(sum / arr.length));
 }
 
 function romanToInt(x) {
@@ -417,13 +398,25 @@ function ticTacToeWinner(x) {
   return "draw";
 }
 
-console.log(
-  ticTacToeWinner([
-    ["x", "o", "x"],
-    ["o", "x", "o"],
-    ["o", "o", "x"],
-  ])
-);
+function isAnagram(x, y) {
+  // x and y are strings.
+  // return boolean
+  // (ex. x="heart", y="earth", you should return true)
+  if (x == y) return true;
+  // if (x === "rat" && y === "car") return false;
+  x = x.replace(/[^\w]/g).toLowerCase().split("").sort().join("");
+  y = y.replace(/[^\w]/g).toLowerCase().split("").sort().join("");
+  console.log(x, y);
+  return x == y;
+}
+
+// console.log(
+//   ticTacToeWinner([
+//     ["x", "o", "x"],
+//     ["o", "x", "o"],
+//     ["o", "o", "x"],
+//   ])
+// );
 
 // console.log(
 //   getHalfArray([
@@ -486,58 +479,67 @@ console.log(
 // console.log(averageAsciiChar("Hello World!"));
 // console.log(romanToInt("IV"));
 
-console.log(
-  ticTacToeWinner([
-    ["x", "o", "x"],
-    ["o", "x", "o"],
-    ["o", "o", "x"],
-  ]) == "x"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["x", "o", "x"],
+//     ["o", "x", "o"],
+//     ["o", "o", "x"],
+//   ]) == "x"
+// );
 
-console.log(
-  ticTacToeWinner([
-    ["x", "o", "o"],
-    ["x", "x", "o"],
-    ["x", "o", "o"],
-  ]) == "error"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["x", "o", "o"],
+//     ["x", "x", "o"],
+//     ["x", "o", "o"],
+//   ]) == "error"
+// );
 
-console.log(
-  ticTacToeWinner([
-    ["x", "o", "x"],
-    ["o", "o", "o"],
-    ["o", "x", "x"],
-  ]) == "o"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["x", "o", "x"],
+//     ["o", "o", "o"],
+//     ["o", "x", "x"],
+//   ]) == "o"
+// );
 
-console.log(
-  ticTacToeWinner([
-    ["x", "x", "o"],
-    ["o", "x", "o"],
-    ["x", "o", "x"],
-  ]) == "x"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["x", "x", "o"],
+//     ["o", "x", "o"],
+//     ["x", "o", "x"],
+//   ]) == "x"
+// );
 
-console.log(
-  ticTacToeWinner([
-    ["o", "x", "x"],
-    ["o", "o", "x"],
-    ["o", "x", "o"],
-  ]) == "draw"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["o", "x", "x"],
+//     ["o", "o", "x"],
+//     ["o", "x", "o"],
+//   ]) == "draw"
+// );
 
-console.log(
-  ticTacToeWinner([
-    ["o", "o", "x"],
-    ["o", "x", "o"],
-    ["o", "x", "x"],
-  ]) == "o"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["o", "o", "x"],
+//     ["o", "x", "o"],
+//     ["o", "x", "x"],
+//   ]) == "o"
+// );
 
-console.log(
-  ticTacToeWinner([
-    ["o", "x", "o"],
-    ["x", "x", "o"],
-    ["x", "o", "o"],
-  ]) == "o"
-);
+// console.log(
+//   ticTacToeWinner([
+//     ["o", "x", "o"],
+//     ["x", "x", "o"],
+//     ["x", "o", "o"],
+//   ]) == "o"
+// );
+
+// console.log(isAnagram("rat", "car"));
+
+// console.log(isRotatedStr("at", "ta"));
+
+console.log(isAnagram("est", "vel"));
+console.log(isAnagram("consequatur", "repudiandae"));
+console.log(isAnagram("rat", "car"));
+// console.log(isAnagram( "est","vel" ) = trueexpected: false
