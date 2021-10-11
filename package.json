@@ -10,7 +10,8 @@
     "license": "MIT",
     "dependencies": {
         "chrome-aws-lambda": "^10.1.0",
-        "puppeteer-core": "^10.4.0"
+        "puppeteer-core": "^10.4.0",
+        "puppeteer-firefox": "^0.5.1"
     },
     "devDependencies": {
         "puppeteer": "^10.4.0"
